@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
+using System.Collections;
 using System.Text.RegularExpressions;
 
 namespace Stringcalculator
 {
     public abstract class Csv
     {
-        private const string CustomDelimiterIndicator = "//";
         protected string CsvText;
 
         protected Csv(string csvText)
@@ -16,10 +17,10 @@ namespace Stringcalculator
 
         public static Csv Read(string csvText)
         {
-            if (csvText.StartsWith(CustomDelimiterIndicator))
-            {
-                return new CustomDelimitedCsv(csvText);
-            }
+            //if (csvText.StartsWith(CustomDelimiterIndicator))
+            //{
+            //    return new CustomDelimitedCsv(csvText);
+            //}
             return new DefaultDelimitedCsv(csvText);
         }
 
@@ -27,9 +28,9 @@ namespace Stringcalculator
 
         protected abstract string Text { get; }
 
-        public IEnumerable<long> GetIndividualElements()
+        public IList<string> GetIndividualElements()
         {
-            return Text.Split(Delimiters).Select(long.Parse).ToList();
+            return Text.Split(Delimiters);
         }
     }
 
@@ -54,25 +55,25 @@ namespace Stringcalculator
         }
     }
 
-    public class CustomDelimitedCsv : Csv
+    public class CustomDelimitedCsv
     {
         private const int DelimiterSpecifierLength = 4;
         private static readonly Regex CustomDelimiterCapture = new Regex(@"//(.)\n");
 
-        public CustomDelimitedCsv(string csvText)
-            : base(csvText)
-        {
-        }
+        //public CustomDelimitedCsv(string csvText)
+        //    : base(csvText)
+        //{
+        //}
 
-        protected override char[] Delimiters
-        {
-            get { return GetCustomDelimiter(CsvText); }
-        }
+        //protected override char[] Delimiters
+        //{
+        //    get { return GetCustomDelimiter(CsvText); }
+        //}
 
-        protected override string Text
-        {
-            get { return CsvText.Substring(DelimiterSpecifierLength); }
-        }
+        //protected override string Text
+        //{
+        //    get { return CsvText.Substring(DelimiterSpecifierLength); }
+        //}
 
         private static char[] GetCustomDelimiter(string csv)
         {

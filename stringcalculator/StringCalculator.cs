@@ -4,45 +4,44 @@ using System.Linq;
 
 namespace Stringcalculator
 {
-    public class StringCalculator
+    public class stringCalculator
     {
+        private static long TOTAL;
+
         public static long Add(string csvText)
         {
-            return IsEmpty(csvText)
-                ? 0
-                : TheSumOfTheElementsIn(csvText);
-        }
-
-        private static bool IsEmpty(string csvText)
-        {
-            return csvText == string.Empty;
-        }
-
-        private static long TheSumOfTheElementsIn(string csvText)
-        {
-            var elements = TheIndividualElementsOfThe(csvText);
-            ValidateThatThereAreNoNegativesIn(elements);
-            return elements.Sum();
-        }
-
-        private static IList<long> TheIndividualElementsOfThe(string csvText)
-        {
-            return Csv.Read(csvText).GetIndividualElements().ToList();
-        }
-
-        private static void ValidateThatThereAreNoNegativesIn(IEnumerable<long> elements)
-        {
-            var negatives = elements.Where(IsNegative).ToList();
-
-            if (negatives.Count() != 0)
+            // Return 0 if the input is empty
+            if (csvText == string.Empty)
             {
-                throw new ArgumentException(string.Format("negatives not allowed: {0}", string.Join(", ", negatives)));
+                return 0;
             }
+            
+            // Otherwise calculate the total if there are no negatives 
+            var strings = Csv.Read(csvText).GetIndividualElements();
+            GetNegatives(strings);
+
+            // sum of te numbers
+            TOTAL = 0;
+            foreach (var str in strings) TOTAL += long.Parse(str);
+            
+            return TOTAL;
         }
 
-        private static bool IsNegative(long elem)
+        private static void GetNegatives(IEnumerable<string> elements)
         {
-            return elem < 0;
+            var nums = new List<long>();
+            foreach (var element in elements)
+            // If negative
+                if (long.Parse(element) < 0)
+                {
+                    nums.Add(long.Parse(element));
+            }
+
+            // There was a negative
+            if (nums.Count() != 0)
+            {
+                throw new ArgumentException(string.Format("negatives not allowed: {0}", string.Join(", ", nums)));
+            }
         }
     }
 }
